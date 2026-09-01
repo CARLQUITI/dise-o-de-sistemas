@@ -2,6 +2,6 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY . .
+COPY vehiculo.py .
 
 CMD ["python", "vehiculo.py"]
