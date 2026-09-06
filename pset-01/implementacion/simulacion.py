@@ -1,6 +1,14 @@
-#Estudiante1 -> realizará una reservación de la cancha, despues de las 6PM -> No tendra exito con la reservación.
+#Estos condicionales TEMPORALES funcionaran para dar contexto a que es lo que el programa esta haciendo
+# SIN VALIDACIONES, únicamente con print() así como se utilizo en los ejemplos(PATO y vehiculo).
+
+#Descripcion de la condiciones para este deber(Creadas especificamente para la tarea Por mi parte):
+#Estudiante1 -> realizará una reservación de la cancha, despues de las 6PM -> No tendra exito con la reservación(El horario escogido no esta disponible).
 #Capitan1 -> Realizara una reservacion de la cancha, antes de las 6PM -> Tendra exito con la reservacion.
-#Estudiante2 ->tiene una reserva y quiere cancelarla con menos de 2 horas de anticipacion a la reserva
+#Estudiante2 ->tiene una reserva y quiere cancelarla con menos de 2 horas de anticipacion a la reserva.
+#Administrador1 -> Gestionara las opciones personalizadas para el administrador disponibles.
+
+
+
 class comportamientoCliente:
     def cliente(self):
         raise NotImplementedError("Este metodo debe ser implementado")
@@ -10,8 +18,9 @@ class estudiante(comportamientoCliente):
 class capitan(comportamientoCliente):
     def cliente(self):
         print("Capitan: ")
+class administrador(comportamientoCliente):
     def cliente(self):
-        print("administrador")
+        print("Administrador: ")
 
 class comportamientoCrearReserva:
     def crearReserva(self):
@@ -50,7 +59,7 @@ class confirmacionExitosa(comportamientoConfirmacion):
         print("Reserva Confirmada Exitosamente")
 class confirmacionFallida(comportamientoConfirmacion):
     def confirmacionReserva(self):
-        print("La reserva no pudo ser confirmada, intente nuevamente")
+        print("La reserva no pudo ser confirmada, horario no diosponible, intente nuevamente")
     
 class comportamientoCancelar:
     def cancelar(self):
@@ -80,6 +89,9 @@ class gestionReservas(comportamientoGestion):
 class gestionMantenimiento(comportamientoGestion):
     def gestion(self):
         print("Mantenimiento de canchas")
+class gestionConflictos(comportamientoGestion):
+    def gestion(self):
+        print("Resolver Conflicto")
 
 class Reserva:
     def __init__(self, comportamientoCliente, comportamientoCrearReserva,comportamientoPrioridad, comportamientoConfirmacion):
@@ -102,6 +114,12 @@ class Reserva:
 
     def CancelarReserva(self):
         self.comportamientoCancelar.cancelar()
+# Una gestion puede tener varios comportamientos dentro de gestion.
+# por lo mismo estoy utilizando una lista de comportamientos para poder actuar sobre ellos
+# es decir, si se lo hiciera en la misma clase de reserva, estos comportamientos crearian un desfase de datos con respecto al constructor.
+# ya que tanto la gestion como las cancelaciones tienes sus propios comportamientos y condiciones dentro de ellos.
+# Y estoy intentando componerlo para que si existe una gestion o una cancelacion de reserva no afecte directamente
+# a todos los demás datos de las reservas.
 
 class Gestion:
     def __init__(self, comportamientoGestion):
@@ -140,7 +158,8 @@ class Administrador(Gestion):
         Gestion1 = gestionCanchas()
         Gestion2 = gestionReservas()
         Gestion3 = gestionMantenimiento()
-        gestiones = [Gestion1, Gestion2, Gestion3]
+        Gestion4 = gestionConflictos()
+        gestiones = [Gestion1, Gestion2, Gestion3, Gestion4]
 
         super().__init__(gestiones)
 #--------------------------------------------------------------------------------------------
